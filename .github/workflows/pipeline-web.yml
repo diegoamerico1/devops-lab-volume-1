@@ -29,3 +29,29 @@ jobs:
 
     # Instancia que iremos executar as tarefas
     runs-on: ubuntu-latest
+
+    # Diretorio que iremos executar o build e os testes
+    defaults:
+      run:
+        working-directory: ${{env.APP_DIR}}
+
+    # Passos que serao executados nesta tarefa
+    steps:
+
+    # Fazer o checkout / pull do repositorio
+    - name: Checkout do repositorio
+      uses: actions/checkout@v3
+
+    # Baixa e configurar o Node.js
+    - name: Configuracao Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+
+    # Instalar os modulos no projeto
+    - name: Instalar modulos
+      run: npm install
+
+    # Executar os testes no projeto
+    - name: Executar testes
+      run: npm test
