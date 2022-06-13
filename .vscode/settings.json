@@ -1,0 +1,8 @@
+{
+    "npm.enableTouchbar": true,
+    "javascript.autoClosingTags": true,
+    "javascript.format.enable": true,
+    "javascript.format.semicolons": "insert",
+    "javascript.preferences.quoteStyle": "single",
+    "javascript.suggest.enabled": true
+}

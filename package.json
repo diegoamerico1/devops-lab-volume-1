@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "postinstall": "if [ $APP_DIR ]; then cd $APP_DIR && npm install --$NODE_ENV && npm run build --if-present; fi",
+    "start": "if [ $APP_DIR ]; then cd $APP_DIR && npm start; fi"
+  }
+}
