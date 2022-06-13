@@ -55,3 +55,57 @@ jobs:
     # Executar os testes no projeto
     - name: Executar testes
       run: npm test
+
+  # Tarefa responsavel pelo Release e envio para Deploy
+  CD:
+
+    # Esta tarefa depende do sucesso da tarefa de CI
+    needs: CI
+    
+    # Tarefa responsavel pelo Build e Test
+    runs-on: ubuntu-latest
+
+    # Variaveis de ambiente utilizadas nos proximos passos
+    env:
+      HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      HEROKU_APP_API_NAME: ${{ secrets.HEROKU_APP_API_NAME }}
+      HEROKU_APP_WEB_NAME: ${{ secrets.HEROKU_APP_WEB_NAME }}
+
+    # Passos que serao executados nesta tarefa
+    steps:
+
+    # Fazer o checkout / pull do repositorio
+    - name: Checkout do repositorio
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    # Autenticação do Heroku CLI via API TOKEN
+    # https://devcenter.heroku.com/articles/authentication
+    - name: Heroku Login
+      run: | 
+        cat > ~/.netrc <<EOF
+            machine api.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+            machine git.heroku.com
+            login $HEROKU_EMAIL
+            password $HEROKU_API_KEY
+        EOF
+
+    # Definir variavel de ambiente com o endereco da nossa aplicacao
+    - name: Heroku APP_DIR Env
+      run: heroku config:set APP_DIR=$APP_DIR -a $HEROKU_APP_WEB_NAME
+
+    # Definir variavel de ambiente com o endereco da API consumida pela nossa aplicacao
+    - name: Heroku API_URL Env
+      run: heroku config:set API_URL=https://$HEROKU_APP_API_NAME.herokuapp.com -a $HEROKU_APP_WEB_NAME
+
+    # Adicionando o Repositório Git Remoto do Heroku para envio do codigo
+    - name: Heroku Git Remote
+      run: heroku git:remote --app $HEROKU_APP_WEB_NAME
+
+    # Enviar o código do projeto para deploy no Heroku
+    - name: Heroku 
+      run: git push heroku HEAD:master --force
