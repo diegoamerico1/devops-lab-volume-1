@@ -51,6 +51,6 @@ describe('App Integration Test', () => {
         // Assert
         assert.equal(response.status, 200);
         assert.ok(response.text.includes('color: red'));
-        assert.ok(response.text.match(/<marquee><h1>Ocorreu um erro: .*<\/h1><\/marquee>/));
+        assert.ok(response.text.match(/<h1>Ocorreu um erro: .*<\/h1>/));
     });
 });
