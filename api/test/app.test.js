@@ -17,6 +17,6 @@ describe('Api Integration Test', () => {
 
         // Assert
         assert.equal(response.status, 200);
-        assert.equal(response.body.message, 'Americo - Atrasados Mercurianos');
+        assert.equal(response.body.message, 'Americo - Atrasados Mercurianos!');
     });
 });
